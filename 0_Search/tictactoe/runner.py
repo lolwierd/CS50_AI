@@ -65,7 +65,6 @@ while True:
                 user = ttt.O
 
     else:
-
         # Draw game board
         tile_size = 80
         tile_origin = (width / 2 - (1.5 * tile_size),
@@ -81,7 +80,7 @@ while True:
                 )
                 pygame.draw.rect(screen, white, rect, 3)
 
-                if board[i][j] != ttt.EMPTY:
+                if board[i][j] != ttt.E:
                     move = moveFont.render(board[i][j], True, white)
                     moveRect = move.get_rect()
                     moveRect.center = rect.center
@@ -124,7 +123,7 @@ while True:
             mouse = pygame.mouse.get_pos()
             for i in range(3):
                 for j in range(3):
-                    if (board[i][j] == ttt.EMPTY and tiles[i][j].collidepoint(mouse)):
+                    if (board[i][j] == ttt.E and tiles[i][j].collidepoint(mouse)):
                         board = ttt.result(board, (i, j))
 
         if game_over:
