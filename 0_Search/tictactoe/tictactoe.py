@@ -136,11 +136,86 @@ def utility(board):
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
+    Algo:
+
     """
     if terminal(board):
         return None
     actions_for_board = actions(board)
-    return actions_for_board.pop()
+    for action in actions_for_board:
+        board_after_action = result(board, action)
+        if terminal(board_after_action):
+            return action
+    turn = player(board)
+
+    if turn is X:
+        action_val = []
+        for action in actions_for_board:
+            val = min_val(result(board, action))
+            print("Value and action: " + str(val) + "/" + str(action))
+            action_val.append((action, val))
+        print("********")
+        return max_value_action(action_val)
+    elif turn is O:
+        action_val = []
+        for action in actions_for_board:
+            val = max_val(result(board, action))
+            print("Value and action: " + str(val) + "/" + str(action))
+            action_val.append((action, val))
+        print("********")
+        return min_value_action(action_val)
+    else:
+        return None
+
+
+def max_value_action(action_val):
+    vals = [av[1] for av in action_val]
+    max_index = -1
+    val = -math.inf
+    for (index, value) in enumerate(vals):
+        if value > val:
+            max_index = index
+            val = value
+    return action_val[max_index][0]
+
+
+def min_value_action(action_val):
+    vals = [av[1] for av in action_val]
+    min_index = -1
+    val = math.inf
+    for (index, value) in enumerate(vals):
+        if value < val:
+            min_index = index
+            val = value
+    return action_val[min_index][0]
+
+
+def min_val(board):
+    """
+    Given a board picks an action which has the minimum utility
+    min(max_val(board))
+    """
+    if terminal(board):
+        return utility(board)
+
+    val = math.inf
+    for action in actions(board):
+        val = min(val, max_val(result(board, action)))
+    return val
+
+
+def max_val(board):
+    """
+    Given a board picks an action which has maximum utility
+    max(min_val(board))
+    """
+    if terminal(board):
+        return utility(board)
+
+    val = -math.inf
+    for action in actions(board):
+        val = max(val, min_val(result(board, action)))
+    return val
 
 
 def get_diagonals(board):
