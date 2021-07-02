@@ -10,6 +10,9 @@ X = "X"
 O = "O"
 E = None
 
+ALPHA = -math.inf
+BETA = math.inf
+
 
 def initial_state():
     """
@@ -136,8 +139,13 @@ def utility(board):
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
-    Algo:
 
+    Algo: 2 Functions - max_val and min_val
+    max_val tries to get the max value from the eval of the next move
+    recursively. - Basically the function for the maximising agent. min_val tries to get the min value from the eval
+    of the next move recursively. - Basically the function for the minimising agent.
+    max_val = max(min_value(result(state, action)) over all possible actions in the given state
+    min_val = min(max_value(result(state, action)) over all possible actions in the given state
     """
     if terminal(board):
         return None
@@ -169,10 +177,10 @@ def minimax(board):
 
 
 def max_value_action(action_val):
-    vals = [av[1] for av in action_val]
+    values = [av[1] for av in action_val]
     max_index = -1
     val = -math.inf
-    for (index, value) in enumerate(vals):
+    for (index, value) in enumerate(values):
         if value > val:
             max_index = index
             val = value
@@ -180,10 +188,10 @@ def max_value_action(action_val):
 
 
 def min_value_action(action_val):
-    vals = [av[1] for av in action_val]
+    values = [av[1] for av in action_val]
     min_index = -1
     val = math.inf
-    for (index, value) in enumerate(vals):
+    for (index, value) in enumerate(values):
         if value < val:
             min_index = index
             val = value
@@ -195,12 +203,19 @@ def min_val(board):
     Given a board picks an action which has the minimum utility
     min(max_val(board))
     """
+    global BETA, ALPHA, num_pruned
     if terminal(board):
         return utility(board)
 
     val = math.inf
     for action in actions(board):
         val = min(val, max_val(result(board, action)))
+        # This following if maybe completely wrong.
+        if val == -1:
+            return val
+        # if val > BETA:
+        #     return val
+        # ALPHA = val
     return val
 
 
@@ -209,12 +224,19 @@ def max_val(board):
     Given a board picks an action which has maximum utility
     max(min_val(board))
     """
+    global BETA, ALPHA
     if terminal(board):
         return utility(board)
 
     val = -math.inf
     for action in actions(board):
         val = max(val, min_val(result(board, action)))
+        # This following if maybe completely wrong.
+        if val == 1:
+            return val
+        # if val < ALPHA:
+        #     return val
+        # BETA = val
     return val
 
 
