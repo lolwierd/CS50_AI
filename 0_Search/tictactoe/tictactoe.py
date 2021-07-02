@@ -10,9 +10,6 @@ X = "X"
 O = "O"
 E = None
 
-ALPHA = -math.inf
-BETA = math.inf
-
 
 def initial_state():
     """
@@ -159,7 +156,7 @@ def minimax(board):
     if turn is X:
         action_val = []
         for action in actions_for_board:
-            val = min_val(result(board, action))
+            val = min_val(result(board, action), -math.inf, math.inf)
             print("Value and action: " + str(val) + "/" + str(action))
             action_val.append((action, val))
         print("********")
@@ -167,7 +164,7 @@ def minimax(board):
     elif turn is O:
         action_val = []
         for action in actions_for_board:
-            val = max_val(result(board, action))
+            val = max_val(result(board, action), -math.inf, math.inf)
             print("Value and action: " + str(val) + "/" + str(action))
             action_val.append((action, val))
         print("********")
@@ -198,45 +195,43 @@ def min_value_action(action_val):
     return action_val[min_index][0]
 
 
-def min_val(board):
+def min_val(board, ALPHA, BETA):
     """
     Given a board picks an action which has the minimum utility
     min(max_val(board))
     """
-    global BETA, ALPHA, num_pruned
     if terminal(board):
         return utility(board)
 
     val = math.inf
     for action in actions(board):
-        val = min(val, max_val(result(board, action)))
+        val = min(val, max_val(result(board, action), ALPHA, BETA))
         # This following if maybe completely wrong.
         if val == -1:
             return val
-        # if val > BETA:
-        #     return val
-        # ALPHA = val
+        BETA = min(BETA, val)
+        if val <= ALPHA:
+            break
     return val
 
 
-def max_val(board):
+def max_val(board, ALPHA, BETA):
     """
     Given a board picks an action which has maximum utility
     max(min_val(board))
     """
-    global BETA, ALPHA
     if terminal(board):
         return utility(board)
 
     val = -math.inf
     for action in actions(board):
-        val = max(val, min_val(result(board, action)))
-        # This following if maybe completely wrong.
+        val = max(val, min_val(result(board, action), ALPHA, BETA))
         if val == 1:
             return val
-        # if val < ALPHA:
-        #     return val
-        # BETA = val
+        ALPHA = max(ALPHA, val)
+        if val >= BETA:
+            break
+
     return val
 
 
