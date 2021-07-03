@@ -195,6 +195,14 @@ def min_value_action(action_val):
     return action_val[min_index][0]
 
 
+# I feel like i can make it even faster if i do not for loop over all the actions and instead yield val of every
+# action. i.e use a generator function. It is my understanding that the alpha beta pruning will kick in after at
+# least one for loop of the first function call(i.e min_val or max_val). i maybe wrong.
+# Tried to make ALPHA and BETA global but that didn't work AI was pruning the wrong branches.
+# I am wrong. Because there is pruning at the lower states due to the fact that the ALPHA and BETA values can be
+# calculated at the lower sub tree function calls as well after one iteration of the for loop. And they can be
+# propagated at the subsequent loop iteration.
+
 def min_val(board, ALPHA, BETA):
     """
     Given a board picks an action which has the minimum utility
@@ -206,9 +214,8 @@ def min_val(board, ALPHA, BETA):
     val = math.inf
     for action in actions(board):
         val = min(val, max_val(result(board, action), ALPHA, BETA))
-        # This following if maybe completely wrong.
         if val == -1:
-            return val
+            break
         BETA = min(BETA, val)
         if val <= ALPHA:
             break
@@ -227,7 +234,7 @@ def max_val(board, ALPHA, BETA):
     for action in actions(board):
         val = max(val, min_val(result(board, action), ALPHA, BETA))
         if val == 1:
-            return val
+            break
         ALPHA = max(ALPHA, val)
         if val >= BETA:
             break
