@@ -16,7 +16,12 @@ CKnave = Symbol("C is a Knave")
 # A says "I am both a knight and a knave."
 # AKnave
 knowledge0 = And(
-    And(AKnave, Not(And(AKnave, AKnight))),
+    # And(AKnave, Not(And(AKnave, AKnight))),
+
+    # Structure of the problem.
+    Biconditional(AKnight, Not(AKnave)),
+    # Statements said by characters.
+    Biconditional(AKnight, And(AKnight, AKnave)),
 )
 
 # Puzzle 1
@@ -24,8 +29,14 @@ knowledge0 = And(
 # B says nothing.
 # AKnave, BKnight
 knowledge1 = And(
-    And(AKnave, Not(And(AKnave, BKnave))),
-    Or(BKnight, BKnave),
+    # And(AKnave, Not(And(AKnave, BKnave))),
+    # Or(BKnight, BKnave),
+
+    # Structure of the problem.
+    Biconditional(AKnight, Not(AKnave)),
+    Biconditional(BKnight, Not(BKnave)),
+    # Statements said by characters.
+    Biconditional(AKnight, And(AKnave, BKnave))
 )
 
 # Puzzle 2
@@ -34,9 +45,16 @@ knowledge1 = And(
 # AKnave, BKnight
 knowledge2 = And(
     # A Says we are both same
-    And(AKnave, Not(Or(And(AKnave, BKnave), And(AKnight, BKnight)))),
+    # And(AKnave, Not(Or(And(AKnave, BKnave), And(AKnight, BKnight)))),
     # B says we are both different
-    And(BKnight, Or(And(AKnight, BKnave), And(AKnave, BKnight))),
+    # And(BKnight, Or(And(AKnight, BKnave), And(AKnave, BKnight))),
+
+    # Structure of the problem.
+    Biconditional(AKnight, Not(AKnave)),
+    Biconditional(BKnight, Not(BKnave)),
+    # Statements said by characters.
+    Biconditional(AKnight, Or(And(AKnave, BKnave), And(AKnight, BKnight))),
+    Biconditional(BKnight, Or(And(AKnave, BKnight), And(AKnight, BKnave))),
 )
 
 # Puzzle 3
@@ -46,9 +64,19 @@ knowledge2 = And(
 # C says "A is a knight."
 # AKnight, BKnave, CKnight
 knowledge3 = And(
-    Or(AKnave, AKnight),
-    And(BKnave, And(Not(AKnave), Not(CKnave))),
-    And(CKnight, AKnight),
+    # Or(AKnave, AKnight),
+    # And(BKnave, And(Not(AKnave), Not(CKnave))),
+    # And(CKnight, AKnight),
+
+    # Structure of the problem.
+    Biconditional(AKnight, Not(AKnave)),
+    Biconditional(BKnight, Not(BKnave)),
+    Biconditional(CKnight, Not(CKnave)),
+    # Statements said by characters.
+    Or(AKnight, AKnave),
+    Biconditional(BKnight, Biconditional(AKnight, AKnave)),
+    Biconditional(BKnight, CKnave),
+    Biconditional(CKnight, AKnight),
 )
 
 
