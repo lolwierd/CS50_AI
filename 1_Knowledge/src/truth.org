@@ -1,0 +1,6 @@
+
+| AKnight | AKnave | (AKnight or AKnave) And Not(AKnave and AKnight) |
+| T       | F      | T                                               |
+| F       | T      |                                                 |
+| F       | F      |                                                 |
+| T       | T      |                                                 |
